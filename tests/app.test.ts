@@ -1,4 +1,5 @@
 import request from 'supertest';
+import app from '../src/app';
 describe('Snake Validator API', () => {
     describe('GET /new', () => {
         it('should start a new game with valid parameters', async () => {
