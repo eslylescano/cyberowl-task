@@ -45,4 +45,32 @@ describe('validateTicks', () => {
         }
     });
 
+    it('should return false if the snake goes out of bounds', () => {
+        const ticks = [
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+            { velX: 1, velY: 0 },
+        ];
+
+        const result = validateTicks(state, ticks);
+        expect(result).toBe(false);
+    });
+
+    it('should return false for invalid movement (180-degree turn)', () => {
+        const ticks = [
+            { velX: 1, velY: 0 },
+            { velX: -1, velY: 0 }
+        ];
+
+        const result = validateTicks(state, ticks);
+        expect(result).toBe(false);
+    });
+
 });
