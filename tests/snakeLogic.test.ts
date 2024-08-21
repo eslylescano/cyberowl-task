@@ -1,4 +1,4 @@
-import { getInitialState } from "../src/logic/snakeLogic";
+import { getInitialState, validateTicks } from "../src/logic/snakeLogic";
 import { State } from "../src/types";
 
 describe('Snake Logic', () => {
@@ -24,7 +24,7 @@ describe('Snake Logic', () => {
 
 describe('validateTicks', () => {
     let state: State;
-    
+
         state = {
             gameId: 'test-game',
             width: 10,
