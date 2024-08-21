@@ -1,6 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import app from '../src/app';
+import { State } from '../src/types';
 
 describe('Snake Validator API - GET /new Integration Tests', () => {
     describe('GET /new', () => {
@@ -38,6 +39,113 @@ describe('Snake Validator API - GET /new Integration Tests', () => {
             });
 
             const response = await request(faultyApp).get('/new?w=10&h=10');
+            expect(response.status).toBe(500);
+        });
+    });
+});
+
+
+
+describe('Snake Validator API - POST /new Integration Tests', () => {
+
+    describe('POST /validate', () => {
+
+        it('should return 200 for valid state and ticks', async () => {
+            const initialState: State = {
+                gameId: 'test-game-200',
+                width: 10,
+                height: 10,
+                score: 0,
+                fruit: { x: 2, y: 0 },
+                snake: { x: 0, y: 0, velX: 1, velY: 0 },
+            };
+
+            const ticks = [
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+            ];
+
+            const response = await request(app)
+                .post('/validate')
+                .send({ ...initialState, ticks });
+
+            expect(response.status).toBe(200);
+            expect(response.body.score).toBe(1);
+            expect(response.body.fruit).not.toEqual(initialState.fruit);
+        });
+
+        it('should return 400 for invalid request (missing fields)', async () => {
+            const response = await request(app)
+                .post('/validate')
+                .send({
+                    gameId: 'test-game-400',
+                    width: 10,
+                    score: 0,
+                    fruit: { x: 5, y: 5 },
+                    snake: { x: 0, y: 0, velX: 1, velY: 0 },
+                    ticks: [{ velX: 1, velY: 0 }],
+                });
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 404 if the ticks do not lead the snake to the fruit position', async () => {
+            const initialState: State = {
+                gameId: 'test-game-404',
+                width: 10,
+                height: 10,
+                score: 0,
+                fruit: { x: 5, y: 5 },
+                snake: { x: 0, y: 0, velX: 1, velY: 0 },
+            };
+
+            const ticks = [
+                { velX: 1, velY: 0 },
+                { velX: 0, velY: 1 },
+            ];
+
+            const response = await request(app)
+                .post('/validate')
+                .send({ ...initialState, ticks });
+
+            expect(response.status).toBe(404);
+        });
+
+        it('should return 418 if the snake goes out of bounds', async () => {
+            const initialState: State = {
+                gameId: 'test-game-418',
+                width: 10,
+                height: 10,
+                score: 0,
+                fruit: { x: 5, y: 5 },
+                snake: { x: 0, y: 0, velX: 1, velY: 0 },
+            };
+
+            const ticks = [
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+                { velX: 1, velY: 0 },
+            ];
+
+            const response = await request(app)
+                .post('/validate')
+                .send({ ...initialState, ticks });
+
+            expect(response.status).toBe(418);
+        });
+
+        it('should return 500 for internal server error (simulate with faulty input)', async () => {
+            const response = await request(app)
+                .post('/validate')
+                .send('malformed json');
+
             expect(response.status).toBe(500);
         });
     });
