@@ -19,3 +19,30 @@ describe('Snake Logic', () => {
         });
     });
 });
+
+
+
+describe('validateTicks', () => {
+    let state: State;
+    
+        state = {
+            gameId: 'test-game',
+            width: 10,
+            height: 10,
+            score: 0,
+            fruit: { x: 5, y: 5 },
+            snake: { x: 0, y: 0, velX: 1, velY: 0 },
+        };
+
+
+    it('should move the snake forward correctly', () => {
+        const ticks = [{ velX: 1, velY: 0 }];
+        const result = validateTicks(state, ticks);
+
+        expect(result).toBeTruthy();
+        if (result) {
+            expect(result.snake).toEqual({ x: 1, y: 0, velX: 1, velY: 0 });
+        }
+    });
+
+});
