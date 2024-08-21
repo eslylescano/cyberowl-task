@@ -1,3 +1,6 @@
+import { getInitialState } from "../src/logic/snakeLogic";
+import { State } from "../src/types";
+
 describe('Snake Logic', () => {
     describe('getInitialState', () => {
         it('should return the correct initial state', () => {
