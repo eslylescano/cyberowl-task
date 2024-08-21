@@ -1,4 +1,4 @@
-import { getInitialState, validateTicks } from "../src/logic/snakeLogic";
+import { checkFruitReached, getInitialState, validateTicks } from "../src/logic/snakeLogic";
 import { State } from "../src/types";
 
 describe('Snake Logic', () => {

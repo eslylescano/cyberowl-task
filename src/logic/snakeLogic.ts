@@ -1,4 +1,4 @@
-import { State } from "../types";
+import { Fruit, Snake, State } from "../types";
 
 export const getInitialState = (width: number, height: number): State => {
     return {
@@ -43,4 +43,8 @@ export const validateTicks = (state: State, ticks: { velX: number; velY: number 
     }
 
     return { ...state, snake };
+};
+
+export const checkFruitReached = (snake: Snake, fruit: Fruit): boolean => {
+    return snake.x === fruit.x && snake.y === fruit.y;
 };
