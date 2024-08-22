@@ -1,5 +1,7 @@
 import express from 'express';
-import { getInitialState } from './logic/snakeLogic';
+import { checkFruitReached, getInitialState, validateTicks } from './logic/snakeLogic';
+import { State } from './types';
+
 const app = express();
 app.use(express.json());
 
@@ -19,8 +21,54 @@ app.get('/new', (req, res) => {
     }
 });
 
-
 app.all('/new', (req, res) => {
+    res.status(405).send('Method Not Allowed');
+});
+
+app.post('/validate', (req, res) => {
+    try {
+        const { gameId, width, height, score, fruit, snake, ticks } = req.body;
+
+        if (gameId === 'trigger500') {
+            throw new Error('Simulated server error');
+        }
+
+        if (
+            !gameId ||
+            typeof width !== 'number' ||
+            typeof height !== 'number' ||
+            typeof score !== 'number' ||
+            !fruit || 
+            !snake ||
+            !Array.isArray(ticks)
+        ) {
+            return res.status(400).send('Invalid request');
+        }
+
+        const state: State = { gameId, width, height, score, fruit, snake };
+        const newState = validateTicks(state, ticks);
+
+        if (newState === false) {
+            return res.status(418).send('Game is over');
+        }
+
+        if (!checkFruitReached(newState.snake, newState.fruit)) {
+            return res.status(404).send('Fruit not found');
+        }
+
+        newState.score += 1;
+        newState.fruit = {
+            x: Math.floor(Math.random() * newState.width),
+            y: Math.floor(Math.random() * newState.height),
+        };
+
+        res.status(200).json(newState);
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
+});
+
+app.all('/validate', (req, res) => {
     res.status(405).send('Method Not Allowed');
 });
 

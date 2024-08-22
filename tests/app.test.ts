@@ -44,8 +44,6 @@ describe('Snake Validator API - GET /new Integration Tests', () => {
     });
 });
 
-
-
 describe('Snake Validator API - POST /new Integration Tests', () => {
 
     describe('POST /validate', () => {
@@ -111,6 +109,11 @@ describe('Snake Validator API - POST /new Integration Tests', () => {
             expect(response.status).toBe(404);
         });
 
+        it('should return 405 for invalid method (GET instead of POST)', async () => {
+            const response = await request(app).get('/validate');
+            expect(response.status).toBe(405);
+        });
+
         it('should return 418 if the snake goes out of bounds', async () => {
             const initialState: State = {
                 gameId: 'test-game-418',
@@ -144,7 +147,15 @@ describe('Snake Validator API - POST /new Integration Tests', () => {
         it('should return 500 for internal server error (simulate with faulty input)', async () => {
             const response = await request(app)
                 .post('/validate')
-                .send('malformed json');
+                .send({
+                    gameId: 'trigger500',  // This will trigger the internal server error
+                    width: 10,
+                    height: 10,
+                    score: 0,
+                    fruit: { x: 5, y: 5 },
+                    snake: { x: 0, y: 0, velX: 1, velY: 0 },
+                    ticks: [{ velX: 1, velY: 0 }]
+                });
 
             expect(response.status).toBe(500);
         });
