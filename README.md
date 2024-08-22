@@ -1,9 +1,6 @@
-Here's a sample `README.md` for your project based on the repository link provided. This README file includes sections for project overview, setup instructions, API documentation, and testing information. 
-
-```markdown
 # Cyberowl Task
 
-Welcome to the Cyberowl Task repository! This project implements a Snake game API with functionality for initializing game state, validating game ticks, and handling fruit collection. 
+Welcome to the Cyberowl Task repository! This project implements a Snake game API with functionality for initializing game state, validating game ticks, and handling fruit collection.
 
 ## Project Overview
 
@@ -106,6 +103,7 @@ GET /new?w=10&h=10
 **Endpoint:** `POST /validate`
 
 **Request Body:**
+
 ```json
 {
   "gameId": "string",
@@ -170,16 +168,3 @@ yarn test
 
 This will execute the test suite and verify that the functionality of the Snake game API works as expected.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-### Explanation:
-- **Project Overview**: Brief description of the project and its functionality.
-- **Setup Instructions**: Detailed steps to set up the project on a local machine.
-- **API Documentation**: Details about the API endpoints, including request and response examples.
-- **Testing**: Instructions on how to run tests for the project.
-- **License**: Specifies the license type for the project.
-
-Feel free to customize this README further based on specific details or additional features of your project.
