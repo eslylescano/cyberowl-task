@@ -148,7 +148,7 @@ describe('Snake Validator API - POST /new Integration Tests', () => {
             const response = await request(app)
                 .post('/validate')
                 .send({
-                    gameId: 'trigger500',  // This will trigger the internal server error
+                    gameId: 'trigger500',
                     width: 10,
                     height: 10,
                     score: 0,

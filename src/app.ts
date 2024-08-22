@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkFruitReached, getInitialState, validateTicks } from './logic/snakeLogic';
+import { checkFruitReached, getInitialState, updateStateAfterFruitReached, validateTicks } from './logic/snakeLogic';
 import { State } from './types';
 
 const app = express();
@@ -46,7 +46,7 @@ app.post('/validate', (req, res) => {
         }
 
         const state: State = { gameId, width, height, score, fruit, snake };
-        const newState = validateTicks(state, ticks);
+        let newState = validateTicks(state, ticks);
 
         if (newState === false) {
             return res.status(418).send('Game is over');
@@ -56,11 +56,7 @@ app.post('/validate', (req, res) => {
             return res.status(404).send('Fruit not found');
         }
 
-        newState.score += 1;
-        newState.fruit = {
-            x: Math.floor(Math.random() * newState.width),
-            y: Math.floor(Math.random() * newState.height),
-        };
+        newState = updateStateAfterFruitReached(newState);
 
         res.status(200).json(newState);
     } catch (error) {

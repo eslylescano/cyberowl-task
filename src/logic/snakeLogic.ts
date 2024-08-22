@@ -48,3 +48,14 @@ export const validateTicks = (state: State, ticks: { velX: number; velY: number 
 export const checkFruitReached = (snake: Snake, fruit: Fruit): boolean => {
     return snake.x === fruit.x && snake.y === fruit.y;
 };
+
+export const updateStateAfterFruitReached = (state: State): State => {
+    return {
+        ...state,
+        score: state.score + 1,
+        fruit: {
+            x: Math.floor(Math.random() * state.width),
+            y: Math.floor(Math.random() * state.height),
+        },
+    };
+};

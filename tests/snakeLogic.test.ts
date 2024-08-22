@@ -1,4 +1,4 @@
-import { checkFruitReached, getInitialState, validateTicks } from "../src/logic/snakeLogic";
+import { checkFruitReached, getInitialState, validateTicks, updateStateAfterFruitReached } from "../src/logic/snakeLogic";
 import { State } from "../src/types";
 
 describe('Snake Logic', () => {
@@ -19,20 +19,18 @@ describe('Snake Logic', () => {
         });
     });
 
-
     describe('validateTicks', () => {
         let state: State;
     
-            state = {
-                gameId: 'test-game',
-                width: 10,
-                height: 10,
-                score: 0,
-                fruit: { x: 5, y: 5 },
-                snake: { x: 0, y: 0, velX: 1, velY: 0 },
-            };
-    
-    
+        state = {
+            gameId: 'test-game',
+            width: 10,
+            height: 10,
+            score: 0,
+            fruit: { x: 5, y: 5 },
+            snake: { x: 0, y: 0, velX: 1, velY: 0 },
+        };
+
         it('should move the snake forward correctly', () => {
             const ticks = [{ velX: 1, velY: 0 }];
             const result = validateTicks(state, ticks);
@@ -42,7 +40,7 @@ describe('Snake Logic', () => {
                 expect(result.snake).toEqual({ x: 1, y: 0, velX: 1, velY: 0 });
             }
         });
-    
+
         it('should return false if the snake goes out of bounds', () => {
             const ticks = [
                 { velX: 1, velY: 0 },
@@ -70,9 +68,8 @@ describe('Snake Logic', () => {
             const result = validateTicks(state, ticks);
             expect(result).toBe(false);
         });
-    
     });
-    
+
     describe('checkFruitReached', () => {
         it('should return true if the snake reaches the fruit', () => {
             const snake = { x: 5, y: 5, velX: 1, velY: 0 };
@@ -89,7 +86,39 @@ describe('Snake Logic', () => {
         });
     });
 
+    describe('updateStateAfterFruitReached', () => {
+        it('should increment the score by 1', () => {
+            const initialState: State = {
+                gameId: 'test-game',
+                width: 10,
+                height: 10,
+                score: 5,
+                fruit: { x: 5, y: 5 },
+                snake: { x: 1, y: 1, velX: 1, velY: 0 },
+            };
+
+            const updatedState = updateStateAfterFruitReached(initialState);
+
+            expect(updatedState.score).toBe(initialState.score + 1);
+        });
+
+        it('should place the fruit at a new random position', () => {
+            const initialState: State = {
+                gameId: 'test-game',
+                width: 10,
+                height: 10,
+                score: 5,
+                fruit: { x: 5, y: 5 },
+                snake: { x: 1, y: 1, velX: 1, velY: 0 },
+            };
+
+            const updatedState = updateStateAfterFruitReached(initialState);
+
+            expect(updatedState.fruit).not.toEqual(initialState.fruit);
+            expect(updatedState.fruit.x).toBeGreaterThanOrEqual(0);
+            expect(updatedState.fruit.x).toBeLessThan(initialState.width);
+            expect(updatedState.fruit.y).toBeGreaterThanOrEqual(0);
+            expect(updatedState.fruit.y).toBeLessThan(initialState.height);
+        });
+    });
 });
-
-
-
